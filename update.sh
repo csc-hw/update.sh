@@ -6,28 +6,39 @@
 # directories listed in exclude array:
 #######
 exclude=(
-  "door-prizes/"
+	"door-prizes/"
   "website/"
+  "twister/"
 )
 #######
 
-WHITE='\033[1;30m'
-RED='\033[0;31m'
+GRNBG='\e[1;97;42m'
+REDBG='\e[1;97;41m'
 NC='\033[0m'
 
-echo
-echo -e "${WHITE}Checking with git...${NC}"
+printf "%-20s" "Connecting..."
+if ! curl -s --head  --request GET https://github.com | gre$
+	echo -e "${REDBG}[FAIL]${NC}"
+  echo "err: remote unreachable"
+  exit 1
+else
+  echo
+fi
 
-cd public_html/git/
+cd ~/public_html/git/
 
 for d in */ ; do
   if [[ ! ${exclude[*]} =~ "$d" ]]; then
-    echo "Updating $d:"
-    cd $d && git pull #--quiet
+    printf "%-20s" "$d"
+    cd $d
+    if git pull --quiet; then
+			echo -e "${GRNBG} [OK] ${NC}"
+    else
+      echo -e "${REDBG}[FAIL]${NC}"
+    fi
     cd ..
   else
-    echo -e "${RED}Skipping${NC} $d"
+    printf "%-20s" "$d"
+    echo -e "${REDBG}[SKIP]${NC}"
   fi
 done
-
-echo
