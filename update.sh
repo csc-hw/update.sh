@@ -17,7 +17,7 @@ REDBG='\e[1;97;41m'
 NC='\033[0m'
 
 printf "%-20s" "Connecting..."
-if ! curl -s --head  --request GET https://github.com | gre$; then
+if ! curl -s --head  --request GET https://github.com | grep "200 OK" > /dev/null; then
   echo -e "${REDBG}[FAIL]${NC}"
   echo "err: remote unreachable"
   exit 1
